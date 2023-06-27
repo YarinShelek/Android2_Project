@@ -4,10 +4,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Text } from "react-native";
 import ProductList from "./ProductList";
 import SettingsPage from "./SettingsPage ";
+import Cart from "./Cart";
+import Search from "./Search";
 
-const SearchScreen = () => <Text>Search</Text>;
-
-const ShoppingCartScreen = () => <Text>Shopping Cart</Text>;
 
 const BottomNavBar = () => {
   const [index, setIndex] = React.useState(0);
@@ -17,11 +16,11 @@ const BottomNavBar = () => {
       case "home":
         return <ProductList />;
       case "search":
-        return <SearchScreen />;
+        return <Search />;
       case "settings":
         return <SettingsPage />;
       case "cart":
-        return <ShoppingCartScreen />;
+        return <Cart />;
       default:
         return null;
     }

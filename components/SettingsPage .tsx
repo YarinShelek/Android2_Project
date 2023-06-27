@@ -1,15 +1,17 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Divider, Switch } from 'react-native-paper';
-
-import { ThemeContext } from './ThemeProvider';
+import React from 'react';
+import { View, Text, Switch, StyleSheet } from 'react-native';
+import { RadioButton, Divider } from 'react-native-paper';
 
 const SettingsPage: React.FC = () => {
-  const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('english');
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [selectedLanguage, setSelectedLanguage] = React.useState('english');
   const appVersion = '69420';
 
-  const handleLanguageChange = (language: string) => {
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevMode) => !prevMode);
+  };
+
+  const handleLanguageChange = (language) => {
     setSelectedLanguage(language);
   };
 
@@ -48,7 +50,7 @@ const SettingsPage: React.FC = () => {
           onValueChange={handleLanguageChange}
         >
           <View style={styles.radioButtonContainer}>
-            <RadioButton value="english" />
+            <RadioButton value="english" color="#1DA1F2" />
             <Text style={styles.radioButtonLabel}>English</Text>
           </View>
         </RadioButton.Group>
@@ -69,14 +71,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#F5F5F5',
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#333333',
   },
   divider: {
     marginVertical: 8,
+    backgroundColor: '#CCCCCC',
   },
   settingItem: {
     flexDirection: 'row',
@@ -87,10 +92,11 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     flex: 1,
+    color: '#333333',
   },
   settingValue: {
     fontSize: 16,
-    color: '#0066CC',
+    color: '#1DA1F2',
   },
   radioButtonContainer: {
     flexDirection: 'row',
@@ -99,6 +105,7 @@ const styles = StyleSheet.create({
   radioButtonLabel: {
     fontSize: 16,
     marginLeft: 8,
+    color: '#333333',
   },
 });
 
