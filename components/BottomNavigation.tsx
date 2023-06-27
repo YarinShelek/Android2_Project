@@ -3,10 +3,10 @@ import { BottomNavigation } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Text } from "react-native";
 import ProductList from "./ProductList";
-import SettingsPage from "./SettingsPage ";
+import SettingsPage from "./SettingsPage";
 import Cart from "./Cart";
 import Search from "./Search";
-
+import Login from "./Login";
 
 const BottomNavBar = () => {
   const [index, setIndex] = React.useState(0);
@@ -21,6 +21,8 @@ const BottomNavBar = () => {
         return <SettingsPage />;
       case "cart":
         return <Cart />;
+      case "login":
+        return <Login />;
       default:
         return null;
     }
@@ -35,6 +37,7 @@ const BottomNavBar = () => {
     { key: "search", title: "Search", icon: "magnify" },
     { key: "settings", title: "Settings", icon: "cog" },
     { key: "cart", title: "Cart", icon: "cart" },
+    { key: "login", title: "Login", icon: "account" },
   ];
 
   const renderIcon = ({ route, color }: { route: any; color: string }) => (
@@ -47,7 +50,7 @@ const BottomNavBar = () => {
       onIndexChange={handleIndexChange}
       renderScene={renderScene}
       renderIcon={renderIcon}
-      barStyle={{ backgroundColor: "#F5F5F5" }} // Smoke gray background color
+      barStyle={{ backgroundColor: "#F5F5F5" }} 
     />
   );
 };

@@ -16,8 +16,6 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleAccountDeactivation = () => {
-    // Logic to deactivate the user's account
-    // You can implement the account deactivation functionality here
   };
 
   return (

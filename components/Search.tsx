@@ -8,9 +8,7 @@ const Search: React.FC = () => {
   const [category, setCategory] = useState('');
 
   const handleSearch = () => {
-    // Perform the search logic here
-    // You can filter the data based on the entered parameters
-    const searchResults = []; // Replace with your search logic
+    const searchResults = [];
     console.log(searchResults);
   };
 
