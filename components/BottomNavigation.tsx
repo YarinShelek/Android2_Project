@@ -17,10 +17,10 @@ const BottomNavBar = () => {
         return <ProductList />;
       case "search":
         return <Search />;
-      case "settings":
-        return <SettingsPage />;
       case "cart":
         return <Cart />;
+      case "settings":
+        return <SettingsPage />;
       case "login":
         return <Login />;
       default:
@@ -35,8 +35,8 @@ const BottomNavBar = () => {
   const routes = [
     { key: "home", title: "Home", icon: "home" },
     { key: "search", title: "Search", icon: "magnify" },
-    { key: "settings", title: "Settings", icon: "cog" },
     { key: "cart", title: "Cart", icon: "cart" },
+    { key: "settings", title: "Settings", icon: "cog" },
     { key: "login", title: "Login", icon: "account" },
   ];
 
@@ -50,7 +50,7 @@ const BottomNavBar = () => {
       onIndexChange={handleIndexChange}
       renderScene={renderScene}
       renderIcon={renderIcon}
-      barStyle={{ backgroundColor: "#F5F5F5" }} 
+      barStyle={{ backgroundColor: "#F5F5F5" }}
     />
   );
 };
