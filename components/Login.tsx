@@ -96,7 +96,7 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
             'Content-Type': 'application/json',
           },
         });
-        console.log(response);
+        // console.log(response);
         // Handle the response
         handleResponse(response);
       } catch (error) {
