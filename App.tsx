@@ -1,15 +1,22 @@
-import React from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
-
-import BottomNavigation from './components/BottomNavigation';
-import Login from './components/Login';
+import React, { useState } from "react";
+import { Provider as PaperProvider } from "react-native-paper";
+import { Text } from 'react-native';
+import BottomNavigation from "./components/BottomNavigation";
+import Login from "./components/Login";
+import { UserProvider } from "./context/UserContext";
 
 const App: React.FC = () => {
-  const [logged, setLogged] = React.useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  const handleLogin = (userData: User) => {
+    setUser(userData);
+  };
+
   return (
     <PaperProvider>
-      {logged ? <BottomNavigation/> : <Login /> }
-      {/* <BottomNavigation/> */}
+      <UserProvider>
+        {user ? <BottomNavigation /> : <Login onLogin={handleLogin} />}
+      </UserProvider>
     </PaperProvider>
   );
 };
