@@ -12,11 +12,14 @@ import {
 import axios from "axios";
 
 interface Product {
-  id: number;
-  name: string;
+  id: string;
+  title: string;
   price: number;
   category: string;
+  description: string;
+  images: string[];
 }
+
 
 interface SearchItem {
   id: string;
@@ -183,8 +186,8 @@ const Search: React.FC = () => {
           renderItem={({ item }) => (
             <Card style={styles.resultItem}>
               <Card.Content>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text>Price: {item.price}</Text>
+                <Text style={styles.productName}>{item.title}</Text>
+                <Text>{item.price}$</Text>
                 <Text>Category: {item.category}</Text>
               </Card.Content>
               <Card.Actions>
