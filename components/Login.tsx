@@ -1,21 +1,8 @@
-import React, { useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, Text as PaperText, TouchableRipple } from 'react-native-paper';
 import axios, { AxiosResponse } from 'axios';
-
-interface User {
-  id: number;
-  username: string;
-  name: string;
-  phone: string;
-  addresses: {
-    city: string;
-  };
-  email: string;
-  role: string;
-  password: string;
-  token: string;
-}
+import { UserContext, User } from '../context/UserContext'; // Import UserContext and User
 
 interface RegistrationRequest {
   username: string;
@@ -89,8 +76,8 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
         const queryParams = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
         const url = `https://ksp2.onrender.com/users/login?${queryParams}`;
         console.log(url)
-  
-        const response = await axios.post<User>(url, {
+
+        const response = await axios.post<User>(url, {}, {
           headers: {
             Authorization: token,
             'Content-Type': 'application/json',
@@ -107,7 +94,8 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
 
   const handleResponse = (response: AxiosResponse<User>) => {
     if (response.status === 200) {
-      console.log(isRegistering ? 'Registration successful' : 'Login successful' && onLogin(response.data));
+      console.log(isRegistering ? 'Registration successful' : 'Login successful');
+      onLogin(response.data); // Call the onLogin function with the user data
     } else {
       console.log(isRegistering ? 'Registration failed' : 'Login failed', response.data);
     }
