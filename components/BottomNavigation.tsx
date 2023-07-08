@@ -6,7 +6,7 @@ import ProductList from "./ProductList";
 import SettingsPage from "./SettingsPage";
 import Cart from "./Cart";
 import Search from "./Search";
-import Login from "./Login";
+
 
 const BottomNavBar = () => {
   const [index, setIndex] = React.useState(0);
@@ -21,8 +21,6 @@ const BottomNavBar = () => {
         return <Cart />;
       case "settings":
         return <SettingsPage />;
-      case "login":
-        return <Login />;
       default:
         return null;
     }
@@ -37,7 +35,6 @@ const BottomNavBar = () => {
     { key: "search", title: "Search", icon: "magnify" },
     { key: "cart", title: "Cart", icon: "cart" },
     { key: "settings", title: "Settings", icon: "cog" },
-    { key: "login", title: "Login", icon: "account" },
   ];
 
   const renderIcon = ({ route, color }: { route: any; color: string }) => (
