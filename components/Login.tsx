@@ -32,7 +32,11 @@ interface LoginRequest {
   password: string;
 }
 
-const AuthScreen: React.FC = (...props) => {
+interface LoginProps {
+  onLogin: (userData: User) => void;
+}
+
+const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -61,14 +65,13 @@ const AuthScreen: React.FC = (...props) => {
           .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
           .join('&');
         const url = `https://ksp2.onrender.com/users/register?${queryString}`;
-
-        const response = await axios.post<User>(url, null, {
+        console.log(url)
+        const response = await axios.post<User>(url, {}, {
           headers: {
             Authorization: token,
             'Content-Type': 'application/json',
           },
         });
-
         // Handle the response
         handleResponse(response);
       } catch (error) {
@@ -104,8 +107,7 @@ const AuthScreen: React.FC = (...props) => {
 
   const handleResponse = (response: AxiosResponse<User>) => {
     if (response.status === 200) {
-      console.log(isRegistering ? 'Registration successful' : 'Login successful');
-      const userData = response.data;
+      console.log(isRegistering ? 'Registration successful' : 'Login successful' && onLogin(response.data));
     } else {
       console.log(isRegistering ? 'Registration failed' : 'Login failed', response.data);
     }
