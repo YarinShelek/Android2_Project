@@ -1,31 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const products = [
-  { id: 1, name: 'Product 1', price: '$10', description: 'Product 1 description' },
-  { id: 2, name: 'Product 2', price: '$15', description: 'Product 2 description' },
-  { id: 3, name: 'Product 3', price: '$20', description: 'Product 3 description' },
-  { id: 4, name: 'Product 4', price: '$25', description: 'Product 4 description' },
-  { id: 5, name: 'Product 5', price: '$30', description: 'Product 5 description' },
-];
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+}
 
 const Cart: React.FC = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cartItems, setCartItems] = useState(products);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
 
-  const handleProductPress = (product) => {
-    setSelectedProduct(product);
+  useEffect(() => {
+    // Fetch cart items from the API using the appropriate endpoint
+    fetch('https://ksp2.onrender.com/api/carts/{cartId}')
+      .then((response) => response.json())
+      .then((data: Product[]) => setCartItems(data))
+      .catch((error) => console.error('Error fetching cart items:', error));
+  }, []);
+
+  const handleProductPress = (product: Product) => {
+    // Make an API call to fetch the product details
+    fetch(`https://ksp2.onrender.com/api/products/${product.id}`)
+      .then((response) => response.json())
+      .then((data: Product) => {
+        setSelectedProduct(data);
+      })
+      .catch((error) => console.error('Error fetching product details:', error));
   };
 
   const handleModalClose = () => {
     setSelectedProduct(null);
   };
 
-  const handleRemoveItem = (itemId) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
-    setCartItems(updatedCartItems);
+  const handleRemoveItem = (itemId: number) => {
+    // Make an API call to delete the item from the cart
+    fetch(`https://ksp2.onrender.com/api/carts/{cartId}/${itemId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data: Product[]) => {
+        // Update the state with the updated cart items
+        setCartItems(data);
+      })
+      .catch((error) => console.error('Error removing item from cart:', error));
   };
 
   return (
