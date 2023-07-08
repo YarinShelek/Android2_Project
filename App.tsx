@@ -12,6 +12,7 @@ const App: React.FC = () => {
     setUser(userData);
   };
 
+  // Usage of UserProvider
   return (
     <PaperProvider>
       <UserProvider>
