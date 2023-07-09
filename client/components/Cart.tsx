@@ -54,22 +54,15 @@ const Cart: React.FC<CartProps> = ({ data }) => {
         const fixedUrl = fixUrlString(url, data);
         const responseUser = await axios.get(fixedUrl);
         const dataUser = await responseUser.data;
-        if (dataUser?.cart !== undefined) {
-          console.log("dateUser != undefined")
-          console.log(dataUser);
-        }else{
-          const currentCart = await Promise.resolve(createUserCart());
-          currentCart[0]!.username = dataUser!.username;
-          dataUser.cart = currentCart[0];
-        }
         return dataUser;
       };
-
+      
       const currentUser = await Promise.resolve(getCurrentUser());
       await setUserData(currentUser);
       const showUser = getSavedUser();
       console.log(`showUser:`);
       console.log(showUser);
+      console.log("showUser.cart.product:");
       console.log(showUser!.cart.product);
 
       const productToUpdate = async (products : any[]) => {
@@ -84,10 +77,8 @@ const Cart: React.FC<CartProps> = ({ data }) => {
           console.error("Error fetching product details:", error);
         }
       }; 
-      const resForProductToUpdate = await Promise.resolve(productToUpdate(showUser!.cart.product));
-      console.log("productToUpdate : ");
-      console.log(resForProductToUpdate);
-      setCartItems(resForProductToUpdate);
+
+      setCartItems(showUser!.cart!.product);
     } catch (error) {
       console.error("Error fetching cart items:", error);
     }

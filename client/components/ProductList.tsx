@@ -63,22 +63,23 @@ const ProductList: React.FC = () => {
 
   const handleAddToCart = async (product: Product) => {
     const currentUser = getSavedUser();
-    if(currentUser) {
-      console.log(`Current User: ${currentUser!.username}`);
-      try{
-        const cartId = currentUser!.cart!._id;
-        console.log(`Cart ID : ${cartId}`);
-        const productId = product!._id;
-        console.log(`Product ID : ${productId}`);
-        const response = await axios.post(`https://ksp2.onrender.com/carts/addProduct?cartId=${cartId}&productId=${productId}`);
+    if (currentUser) {
+      // console.log(`Current User: ${currentUser!.username}`);
+      try {
+        const username = currentUser!.username;
+        console.log(`Current User inside handleAddToCart: ${username}`);
+        const productTitle = product.title;
+        console.log(`Product Title : ${productTitle}`);
+        const response = await axios.post(
+          `https://ksp2.onrender.com/carts/addProductBy?username=${username}&title=${productTitle}`
+        );
         const data = response.data;
         console.log(`Data : ${data}`);
-        await updateUserCart(product, "add");
-        
-      }catch(e:any) {
+        // await updateUserCart(product, "add");
+      } catch (e: any) {
         console.log(`Error: ${e.message}`);
-      };
-    };
+      }
+    }
     console.log(`Added to cart: ${product.title} ${product!._id}`);
   };
 
