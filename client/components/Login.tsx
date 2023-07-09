@@ -1,8 +1,13 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TextInput, Button, Text as PaperText, TouchableRipple } from 'react-native-paper';
-import axios, { AxiosResponse } from 'axios';
-import { UserContext, User } from '../context/UserContext'; // Import UserContext and User
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import {
+  TextInput,
+  Button,
+  Text as PaperText,
+  TouchableRipple,
+} from "react-native-paper";
+import axios, { AxiosResponse } from "axios";
+import { User } from "../context/UserContext";
 
 interface RegistrationRequest {
   username: string;
@@ -21,18 +26,27 @@ interface LoginRequest {
 
 interface LoginProps {
   onLogin: (userData: User) => void;
+  onDataChange: (data: string) => void;
 }
 
-const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, onDataChange }) => {
   const [isRegistering, setIsRegistering] = useState(false);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const token = "ASLKnffnsaf24afsAKLnn3";
+
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+  };
+
+  const sendDataToParent = () => {
+    onDataChange(username); // Pass the username data to the parent component
+  };
 
   const handleAuthAction = async () => {
     if (isRegistering) {
@@ -50,19 +64,23 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
 
         const queryString = Object.entries(registrationData)
           .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-          .join('&');
+          .join("&");
         const url = `https://ksp2.onrender.com/users/register?${queryString}`;
-        console.log(url)
-        const response = await axios.post<User>(url, {}, {
-          headers: {
-            Authorization: token,
-            'Content-Type': 'application/json',
-          },
-        });
+        console.log(url);
+        const response = await axios.post<User>(
+          url,
+          {},
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         // Handle the response
         handleResponse(response);
       } catch (error) {
-        console.log('Error:', error);
+        console.log("Error:", error);
       }
     } else {
       // Login
@@ -72,32 +90,44 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
           password,
         };
         console.log(loginData);
-
-        const queryParams = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+        const queryParams = `username=${encodeURIComponent(
+          username
+        )}&password=${encodeURIComponent(password)}`;
         const url = `https://ksp2.onrender.com/users/login?${queryParams}`;
-        console.log(url)
+        console.log(url);
 
-        const response = await axios.post<User>(url, {}, {
-          headers: {
-            Authorization: token,
-            'Content-Type': 'application/json',
-          },
-        });
-        // console.log(response);
+        const response = await axios.post<User>(
+          url,
+          {},
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         // Handle the response
+
+        onDataChange(username); // Pass the username data to the parent component
         handleResponse(response);
       } catch (error) {
-        console.log('Error:', error);
+        console.log("Error:", error);
       }
     }
   };
 
-  const handleResponse = (response: AxiosResponse<User>) => {
+  const handleResponse = async (response: AxiosResponse<User>) => {
     if (response.status === 200) {
-      console.log(isRegistering ? 'Registration successful' : 'Login successful');
+      console.log(
+        isRegistering ? "Registration successful" : "Login successful"
+      );
+      console.log(response);
       onLogin(response.data); // Call the onLogin function with the user data
     } else {
-      console.log(isRegistering ? 'Registration failed' : 'Login failed', response.data);
+      console.log(
+        isRegistering ? "Registration failed" : "Login failed",
+        response.data
+      );
     }
   };
 
@@ -107,12 +137,14 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
 
   return (
     <View style={styles.container}>
-      <PaperText style={styles.title}>{isRegistering ? 'Register' : 'Login'}</PaperText>
+      <PaperText style={styles.title}>
+        {isRegistering ? "Register" : "Login"}
+      </PaperText>
       <TextInput
         style={styles.input}
         label="Username"
         value={username}
-        onChangeText={setUsername}
+        onChangeText={handleUsernameChange}
         mode="outlined"
         autoCapitalize="none"
       />
@@ -175,11 +207,13 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
         />
       )}
       <Button mode="contained" onPress={handleAuthAction} style={styles.button}>
-        {isRegistering ? 'Register' : 'Login'}
+        {isRegistering ? "Register" : "Login"}
       </Button>
       <TouchableRipple onPress={toggleAuthMode}>
         <PaperText style={styles.linkText}>
-          {isRegistering ? 'Already registered? Click here to login!' : 'Not registered? Click here to register!'}
+          {isRegistering
+            ? "Already registered? Click here to login!"
+            : "Not registered? Click here to register!"}
         </PaperText>
       </TouchableRipple>
     </View>
@@ -189,29 +223,29 @@ const AuthScreen: React.FC<LoginProps> = ({ onLogin }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   input: {
-    width: '100%',
+    width: "100%",
     marginBottom: 16,
   },
   button: {
     marginTop: 16,
-    width: '100%',
+    width: "100%",
   },
   linkText: {
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: "blue",
+    textDecorationLine: "underline",
     marginTop: 16,
   },
 });
 
-export default AuthScreen;
+export default Login;

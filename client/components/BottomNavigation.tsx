@@ -6,11 +6,12 @@ import ProductList from "./ProductList";
 import SettingsPage from "./SettingsPage";
 import Cart from "./Cart";
 import Search from "./Search";
+import {getSavedUser} from "../utils/utils";
+import { User } from "../context/UserContext";
 
-
-const BottomNavBar = () => {
+const BottomNavBar = (data:any) => {
   const [index, setIndex] = React.useState(0);
-
+  console.log(data);
   const renderScene = ({ route }: { route: any }) => {
     switch (route.key) {
       case "home":

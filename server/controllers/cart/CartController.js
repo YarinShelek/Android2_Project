@@ -1,9 +1,11 @@
-const Cart = require("../models/Cart");
+const Cart = require("../../models/Cart");
+const User = require("../../models/User");
 
 // Get all carts
 exports.getAllCarts = async (req, res) => {
   try {
     const carts = await Cart.find();
+    console.log(`fount all Carts: ${JSON.stringify(carts)}`);
     res.status(200).json(carts);
   } catch (error) {
     res.status(500).json({ error: "Error fetching carts" });
@@ -16,6 +18,7 @@ exports.getCartById = async (req, res) => {
 
   try {
     const cart = await Cart.findOne({ id: cartId });
+    console.log(`found ${cartId}`);
     if (cart) {
       res.status(200).json(cart);
     } else {
@@ -28,20 +31,39 @@ exports.getCartById = async (req, res) => {
 
 // Create a new cart
 exports.createCart = async (req, res) => {
-  const { id, user_id, date, products } = req.body;
+  const { username, date, products } = req.query;
 
   try {
-    const newCart = new Cart({
-      id,
-      user_id,
-      date,
-      products,
-    });
+    if (username) {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
 
-    const savedCart = await newCart.save();
-    res.status(201).json(savedCart);
+      const newCart = {
+        user_id: user._id,
+        date,
+        products,
+      };
+
+      console.log(`Created a new cart for user: ${user.username}`);
+      console.log(`newCart: ${newCart}`);
+      const savedCart = await Cart.insertMany(newCart);
+      // const savedCart = await newCart.save();
+
+      // Insert the new cart into the user's cart array using insertMany
+      await User.updateOne(
+        { _id: user._id },
+        { $push: { cart: { $each: [savedCart], $position: 0 } } }
+      );
+
+      res.status(201).json(savedCart);
+    } else {
+      res.status(400).json({ error: "Missing username" });
+    }
   } catch (error) {
-    res.status(500).json({ error: "Error creating cart" });
+    console.log(error);
+    res.status(500).json(`Error: ${error} : ${error.message}`);
   }
 };
 
@@ -56,8 +78,9 @@ exports.updateCart = async (req, res) => {
       { user_id, date, products },
       { new: true }
     );
-
+    console.log(`trying to update cart ${cart.id} of user ${user_id}`);
     if (cart) {
+      console.log(`sucess ! cart ${cart.id} updated`);
       res.status(200).json(cart);
     } else {
       res.status(404).json({ error: "Cart not found" });
@@ -82,17 +105,23 @@ exports.deleteCart = async (req, res) => {
     res.status(500).json({ error: "Error deleting cart" });
   }
 };
-
 // Add a product to a cart
 exports.addProductToCart = async (req, res) => {
-  const cartId = req.params.cartId;
-  const { productId, quantity } = req.body;
+  const cartId = req.query.cartId;
+  const productId = req.query.productId;
+  const quantity = req.query.quantity;
 
   try {
     const cart = await Cart.findOne({ id: cartId });
     if (cart) {
+      // Find the product by ID
+      const product = await Product.findOne({ id: productId });
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
       // Add the product to the cart's products array
-      cart.products.push({ productId, quantity });
+      cart.products.push({ product, quantity });
       const updatedCart = await cart.save();
       res.status(200).json(updatedCart);
     } else {
@@ -105,14 +134,16 @@ exports.addProductToCart = async (req, res) => {
 
 // Remove a product from a cart
 exports.removeProductFromCart = async (req, res) => {
-  const cartId = req.params.cartId;
-  const productId = req.params.productId;
+  const cartId = req.query.cartId;
+  const productId = req.query.productId;
 
   try {
     const cart = await Cart.findOne({ id: cartId });
     if (cart) {
       // Remove the product from the cart's products array
-      cart.products = cart.products.filter((product) => product.productId !== productId);
+      cart.products = cart.products.filter(
+        (product) => product.productId !== productId
+      );
       const updatedCart = await cart.save();
       res.status(200).json(updatedCart);
     } else {

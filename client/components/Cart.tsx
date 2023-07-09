@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { UserContext } from '../context/UserContext';
+import { getSavedUser } from '../utils/utils';
 
 interface Product {
   id: number;
@@ -13,10 +15,13 @@ interface Product {
 const Cart: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<Product[]>([]);
+  const currentUser = getSavedUser();
+  console.log(`currentUser: ${currentUser}`);
+  
 
   useEffect(() => {
     // Fetch cart items from the API using the appropriate endpoint
-    fetch('https://ksp2.onrender.com/api/carts/{cartId}')
+    fetch(`https://ksp2.onrender.com/carts/createCart?username=${currentUser?.username}&`)
       .then((response) => response.json())
       .then((data: Product[]) => setCartItems(data))
       .catch((error) => console.error('Error fetching cart items:', error));
@@ -24,7 +29,7 @@ const Cart: React.FC = () => {
 
   const handleProductPress = (product: Product) => {
     // Make an API call to fetch the product details
-    fetch(`https://ksp2.onrender.com/api/products/${product.id}`)
+    fetch(`https://ksp2.onrender.com/products/${product.id}`)
       .then((response) => response.json())
       .then((data: Product) => {
         setSelectedProduct(data);
@@ -38,7 +43,7 @@ const Cart: React.FC = () => {
 
   const handleRemoveItem = (itemId: number) => {
     // Make an API call to delete the item from the cart
-    fetch(`https://ksp2.onrender.com/api/carts/{cartId}/${itemId}`, {
+    fetch(`https://ksp2.onrender.com/api/carts/${user.cartId}/${itemId}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())

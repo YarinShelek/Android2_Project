@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Modal, Text, StyleSheet, Image } from 'react-native';
 import { Card, Title, Button } from 'react-native-paper';
 import Carousel, { RenderItemProps } from 'react-native-snap-carousel';
+import { getSavedUser } from '../utils/utils';
 
 interface Product {
   id: string;
@@ -15,6 +16,7 @@ interface Product {
 const ProductList: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [data, setData] = useState<Product[]>([]);
+  // const demoData = getSavedUser();
 
   useEffect(() => {
     fetchProducts();

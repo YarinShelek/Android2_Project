@@ -1,20 +1,30 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const UserController = require('../controllers/UserController');
+const UserController = require("../controllers/user/UserController");
 
-// Create a new user
-router.post('/', UserController.createUser);
+router.get("/", UserController.getUserByUsername);
+// Register a new user
+router.post("/register", UserController.createUser);
+// Login a user
+router.post("/login", UserController.login);
+// Logout
+router.get("/logout", UserController.logout);
+// User authentication
+router.use(UserController.authenticateUser);
 
-// Get all users
-router.get('/', UserController.getAllUsers);
 
-// Get a specific user by ID
-router.get('/:id', UserController.getUserById);
 
-// Update a user by ID
-router.put('/:id', UserController.updateUser);
+// Admin routes (requires authentication and admin role)
+router.use(UserController.authenticateUser);
+// Get all users (admin only)
+router.get("/getAllUsers", UserController.getAllUsers);
+// Get a specific user by ID (admin only)
+router.get("/:id", UserController.getUserById);
+// Update a user by ID (admin only)
+router.put("/:id", UserController.updateUser);
+// Delete a user by ID (admin only)
+router.delete("/:id", UserController.deleteUser);
 
-// Delete a user by ID
-router.delete('/:id', UserController.deleteUser);
+
 
 module.exports = router;

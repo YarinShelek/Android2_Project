@@ -17,8 +17,14 @@ const usersSchema = new mongoose.Schema({
       lat: Number,
       long: Number
     },
-    phone: String
+    phone: String,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+  token: String,
 });
 
 const Users = mongoose.model("Users", usersSchema);
