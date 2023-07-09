@@ -7,6 +7,7 @@ import { UserProvider } from "./context/UserContext";
 const App: React.FC = () => {
   const [user, setUser] = useState('');
   const [data, setData] = useState('');
+  console.log(`Data inside app : ${data}`);
 
   const handleDataChange = (newData: string) => {
     setData(newData);
@@ -21,7 +22,7 @@ const App: React.FC = () => {
     <PaperProvider>
       <UserProvider>
         {user ? (
-          <BottomNavigation user={data} />
+          <BottomNavigation data={data ? JSON.stringify(data) : "kobi"} />
         ) : (
           <Login onLogin={handleLogin} onDataChange={handleDataChange}/> // Pass the complete user data to Login component
         )}

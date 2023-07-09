@@ -6,12 +6,14 @@ import ProductList from "./ProductList";
 import SettingsPage from "./SettingsPage";
 import Cart from "./Cart";
 import Search from "./Search";
-import {getSavedUser} from "../utils/utils";
-import { User } from "../context/UserContext";
 
-const BottomNavBar = (data:any) => {
+interface BottomNavBarProps {
+  data: string;
+}
+
+const BottomNavBar: React.FC<BottomNavBarProps> = ({ data }) => {
   const [index, setIndex] = React.useState(0);
-  console.log(data);
+  console.log(`Data inside BottomNavBar: ${data}`);
   const renderScene = ({ route }: { route: any }) => {
     switch (route.key) {
       case "home":
@@ -19,7 +21,7 @@ const BottomNavBar = (data:any) => {
       case "search":
         return <Search />;
       case "cart":
-        return <Cart />;
+        return <Cart data={data ? data : "kobi"} />;
       case "settings":
         return <SettingsPage />;
       default:

@@ -11,11 +11,13 @@ export interface User {
   email: string;
   role: string;
   password: string;
+  cart: Cart;
   token: string;
 }
 
 interface Cart {
   id: number;
+  user_id: number;
   items: any[]; // Define the type for cart items based on your data structure
 }
 
